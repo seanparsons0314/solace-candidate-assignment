@@ -8,6 +8,7 @@ interface AdvocateTableProps {
 const AdvocateTable: React.FC<AdvocateTableProps> = ({ advocates }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -23,6 +24,16 @@ const AdvocateTable: React.FC<AdvocateTableProps> = ({ advocates }) => {
   const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setItemsPerPage(Number(e.target.value));
     setCurrentPage(1);
+  };
+
+  const toggleRowExpansion = (id: number) => {
+    const newExpandedRows = new Set(expandedRows);
+    if (newExpandedRows.has(id)) {
+      newExpandedRows.delete(id);
+    } else {
+      newExpandedRows.add(id);
+    }
+    setExpandedRows(newExpandedRows);
   };
 
   const renderPageButtons = () => {
@@ -91,9 +102,33 @@ const AdvocateTable: React.FC<AdvocateTableProps> = ({ advocates }) => {
               <td className="py-2 px-4 border-b">{advocate.city}</td>
               <td className="py-2 px-4 border-b">{advocate.degree}</td>
               <td className="py-2 px-4 border-b">
-                {advocate.specialties.map((s) => (
-                  <div key={s}>{s}</div>
-                ))}
+                {expandedRows.has(advocate.id) ? (
+                  <>
+                    {advocate.specialties.map((s) => (
+                      <div key={s}>{s}</div>
+                    ))}
+                    <button
+                      className="text-blue-500"
+                      onClick={() => toggleRowExpansion(advocate.id)}
+                    >
+                      View Less
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {advocate.specialties.slice(0, 2).map((s) => (
+                      <div key={s}>{s}</div>
+                    ))}
+                    {advocate.specialties.length > 2 && (
+                      <button
+                        className="text-blue-500"
+                        onClick={() => toggleRowExpansion(advocate.id)}
+                      >
+                        View More
+                      </button>
+                    )}
+                  </>
+                )}
               </td>
               <td className="py-2 px-4 border-b">{advocate.yearsOfExperience}</td>
               <td className="py-2 px-4 border-b">{advocate.phoneNumber}</td>
