@@ -38,8 +38,8 @@ export default function Home() {
   };
 
   return (
-    <main className="p-6">
-      <h1 className="text-3xl font-bold mb-6">Solace Advocates</h1>
+    <main className="p-6 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-center">Solace Advocates</h1>
       <SearchBar onChange={onChange} onReset={onResetSearch} />
       <AdvocateTable advocates={filteredAdvocates} />
     </main>

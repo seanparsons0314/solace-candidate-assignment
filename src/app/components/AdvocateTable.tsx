@@ -7,36 +7,38 @@ interface AdvocateTableProps {
 
 const AdvocateTable: React.FC<AdvocateTableProps> = ({ advocates }) => {
   return (
-    <table className="min-w-full bg-white border border-gray-200">
-      <thead>
-        <tr>
-          <th className="py-2 px-4 border-b">First Name</th>
-          <th className="py-2 px-4 border-b">Last Name</th>
-          <th className="py-2 px-4 border-b">City</th>
-          <th className="py-2 px-4 border-b">Degree</th>
-          <th className="py-2 px-4 border-b">Specialties</th>
-          <th className="py-2 px-4 border-b">Years of Experience</th>
-          <th className="py-2 px-4 border-b">Phone Number</th>
-        </tr>
-      </thead>
-      <tbody>
-        {advocates.map((advocate: Advocate) => (
-          <tr key={`advocate-${advocate.id}`}>
-            <td className="py-2 px-4 border-b">{advocate.firstName}</td>
-            <td className="py-2 px-4 border-b">{advocate.lastName}</td>
-            <td className="py-2 px-4 border-b">{advocate.city}</td>
-            <td className="py-2 px-4 border-b">{advocate.degree}</td>
-            <td className="py-2 px-4 border-b">
-              {advocate.specialties.map((s) => (
-                <div key={s}>{s}</div>
-              ))}
-            </td>
-            <td className="py-2 px-4 border-b">{advocate.yearsOfExperience}</td>
-            <td className="py-2 px-4 border-b">{advocate.phoneNumber}</td>
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border border-gray-200">
+        <thead>
+          <tr>
+            <th className="py-2 px-4 border-b">First Name</th>
+            <th className="py-2 px-4 border-b">Last Name</th>
+            <th className="py-2 px-4 border-b">City</th>
+            <th className="py-2 px-4 border-b">Degree</th>
+            <th className="py-2 px-4 border-b">Specialties</th>
+            <th className="py-2 px-4 border-b">Years of Experience</th>
+            <th className="py-2 px-4 border-b">Phone Number</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {advocates.map((advocate: Advocate) => (
+            <tr key={`advocate-${advocate.id}`}>
+              <td className="py-2 px-4 border-b">{advocate.firstName}</td>
+              <td className="py-2 px-4 border-b">{advocate.lastName}</td>
+              <td className="py-2 px-4 border-b">{advocate.city}</td>
+              <td className="py-2 px-4 border-b">{advocate.degree}</td>
+              <td className="py-2 px-4 border-b">
+                {advocate.specialties.map((s) => (
+                  <div key={s}>{s}</div>
+                ))}
+              </td>
+              <td className="py-2 px-4 border-b">{advocate.yearsOfExperience}</td>
+              <td className="py-2 px-4 border-b">{advocate.phoneNumber}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
