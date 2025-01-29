@@ -1,46 +1,42 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SearchBar, AdvocateTable } from "./components";
-import { Advocate } from "./types";
+import useAdvocates from "./hooks/useAdvocates";
 
 export default function Home() {
-  const [advocates, setAdvocates] = useState<Advocate[]>([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
+  const [keyword, setKeyword] = useState("");
+  const [page, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  useEffect(() => {
-    console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
-      response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
-      });
-    });
-  }, []);
+  const { advocates, totalItems, loading } = useAdvocates({ keyword, page, itemsPerPage });
 
   const onSearch = (keyword: string) => {
-    console.log("filtering advocates...");
-    const filteredAdvocates = advocates.filter((advocate) => (
-      advocate.firstName.includes(keyword) ||
-      advocate.lastName.includes(keyword) ||
-      advocate.city.includes(keyword) ||
-      advocate.degree.includes(keyword) ||
-      advocate.specialties.includes(keyword) ||
-      advocate.phoneNumber.toString().includes(keyword)
-    ));
-    setFilteredAdvocates(filteredAdvocates);
+    setKeyword(keyword);
+    setPage(1);
   };
 
   const onResetSearch = () => {
-    setFilteredAdvocates(advocates);
+    setKeyword("");
+    setPage(1);
   };
-
 
   return (
     <main className="p-6 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center">Solace Advocates</h1>
       <SearchBar onSearch={onSearch} onReset={onResetSearch} />
-      <AdvocateTable advocates={filteredAdvocates} />
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <AdvocateTable
+          advocates={advocates}
+          totalItems={totalItems}
+          currentPage={page}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setPage}
+          onPageSizeChange={setItemsPerPage}
+        />
+      )}
     </main>
   );
 }

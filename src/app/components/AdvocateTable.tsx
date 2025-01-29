@@ -3,27 +3,29 @@ import { Advocate } from "../types";
 
 interface AdvocateTableProps {
   advocates: Advocate[];
+  totalItems: number;
+  currentPage: number;
+  itemsPerPage: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
 }
 
-const AdvocateTable: React.FC<AdvocateTableProps> = ({ advocates }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+const AdvocateTable: React.FC<AdvocateTableProps> = ({
+  advocates,
+  totalItems,
+  currentPage,
+  itemsPerPage,
+  onPageChange,
+  onPageSizeChange,
+}) => {
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = advocates.slice(indexOfFirstItem, indexOfLastItem);
-
-  const totalPages = Math.ceil(advocates.length / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
   const maxPageButtons = 5;
 
-  const handleClick = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
-
   const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setItemsPerPage(Number(e.target.value));
-    setCurrentPage(1);
+    onPageSizeChange(Number(e.target.value));
+    onPageChange(1);
   };
 
   const toggleRowExpansion = (id: number) => {
@@ -52,7 +54,7 @@ const AdvocateTable: React.FC<AdvocateTableProps> = ({ advocates }) => {
           className={`mx-1 px-3 py-1 border rounded ${
             currentPage === i ? "bg-blue-500 text-white" : "bg-white"
           }`}
-          onClick={() => handleClick(i)}
+          onClick={() => onPageChange(i)}
         >
           {i}
         </button>
@@ -95,7 +97,7 @@ const AdvocateTable: React.FC<AdvocateTableProps> = ({ advocates }) => {
           </tr>
         </thead>
         <tbody>
-          {currentItems.map((advocate: Advocate) => (
+          {advocates.map((advocate: Advocate) => (
             <tr key={`advocate-${advocate.id}`}>
               <td className="py-2 px-4 border-b">{advocate.firstName}</td>
               <td className="py-2 px-4 border-b">{advocate.lastName}</td>
