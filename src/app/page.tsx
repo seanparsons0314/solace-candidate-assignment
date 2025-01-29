@@ -33,18 +33,14 @@ export default function Home() {
     setFilteredAdvocates(filteredAdvocates);
   };
 
-  const onClick = () => {
+  const onResetSearch = () => {
     setFilteredAdvocates(advocates);
   };
 
   return (
-    <main style={{ margin: "24px" }}>
-      <h1>Solace Advocates</h1>
-      <br />
-      <br />
-      <SearchBar onChange={onChange} onClick={onClick} />
-      <br />
-      <br />
+    <main className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Solace Advocates</h1>
+      <SearchBar onChange={onChange} onReset={onResetSearch} />
       <AdvocateTable advocates={filteredAdvocates} />
     </main>
   );

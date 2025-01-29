@@ -2,18 +2,22 @@ import React from "react";
 
 interface SearchBarProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onClick: () => void;
+  onReset: () => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onChange, onClick }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onChange, onReset }) => {
   return (
-    <div>
-      <p>Search</p>
-      <p>
-        Searching for: <span id="search-term"></span>
-      </p>
-      <input style={{ border: "1px solid black" }} onChange={onChange} />
-      <button onClick={onClick}>Reset Search</button>
+    <div className="flex mb-6">
+      <input
+        className="flex-grow border border-gray-400 p-2 rounded-l mr-2"
+        onChange={onChange}
+      />
+      <button
+        className="bg-blue-500 text-white p-2 rounded-r"
+        onClick={onReset}
+      >
+        Reset Search
+      </button>
     </div>
   );
 };
