@@ -1,6 +1,8 @@
+import { or, ilike } from 'drizzle-orm';
+import { NextRequest, NextResponse } from "next/server";
 import db from "../../../db";
 import { advocates } from "../../../db/schema";
-import { NextRequest, NextResponse } from "next/server";
+
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
@@ -13,16 +15,16 @@ export async function GET(req: NextRequest) {
   const query = db
     .select()
     .from(advocates)
-    .where((builder) => {
-      if (search) {
-        builder.where("firstName", "like", `%${search}%`)
-          .orWhere("lastName", "like", `%${search}%`)
-          .orWhere("city", "like", `%${search}%`)
-          .orWhere("degree", "like", `%${search}%`)
-          .orWhere("specialties", "like", `%${search}%`)
-          .orWhere("phoneNumber", "like", `%${search}%`);
-      }
-    })
+    .where(
+      search ? or(
+        ilike(advocates.firstName, `%${search}%`),
+        ilike(advocates.lastName, `%${search}%`),
+        ilike(advocates.city, `%${search}%`),
+        ilike(advocates.degree, `%${search}%`),
+        // ilike(advocates.specialties., `%${search}%`),
+        ilike(advocates.phoneNumber, `%${search}%`)
+      ) : undefined
+    )
 
   const totalItems = await db.$count(query);
   const data = await query.offset(offset).limit(itemsPerPage);;
